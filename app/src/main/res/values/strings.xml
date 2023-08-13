@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">SendMessage</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sendMessage">Send message</string>
+    <string name="uncheckAll">Uncheck all</string>
+    <string name="clearTextField">Clear text</string>
+    <string name="textToSend">Write here text</string>
+    <string name="successSend">Message has been sent</string>
+    <string name="noContactsChoseError">Please chose at least on contacts</string>
+    <string name="emptyMessageError">Please enter a message</string>
+    <string name="dataLoadingError">Wait for data please</string>
+    <string name="searchContact">Name</string>
+    <string name="info">Write message and choose contacts to send it!!!</string>
+    <string name="mainScope">sendMessage</string>
+    <string name="contactPhoto">contactPhoto</string>
+    <string name="contactInfo">contactInfo</string>
+    <string name="contactName">Name:</string>
+    <string name="contactPhones">Phones:</string>
+    <string name="contactEmails">Emails:</string>
+    <string name="noEmails">No email</string>
+    <string name="contactInfoHeader">Contact Info</string>
+    <string name="close">Close</string>
+</resources>
