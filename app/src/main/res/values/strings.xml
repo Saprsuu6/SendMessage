@@ -21,4 +21,22 @@
     <string name="noEmails">No email</string>
     <string name="contactInfoHeader">Contact Info</string>
     <string name="close">Close</string>
+
+    <!--    Cache for contacts-->
+    <string name="isExist">isExist</string>
+    <string name="amount">contactsAmount</string>
+    <string name="id">contactId</string>
+    <string name="name">contactName</string>
+    <string name="photo">contactPhoto</string>
+    <string name="chose">contactChose</string>
+
+    <string name="phonesAmount">contactPhonesAmount</string>
+    <string name="phonesKey">contactPhonesKey</string>
+    <string name="phonesValue">contactPhonesValue</string>
+
+    <string name="emailsAmount">contactEmailsAmount</string>
+    <string name="emailsKey">contactEmailsKey</string>
+    <string name="emailsValue">contactEmailsValue</string>
+
+    <string name="filter">filter</string>
 </resources>

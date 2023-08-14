@@ -46,23 +46,22 @@ class ContactsList : Fragment(), Filterable {
 
     override fun onPause() {
         super.onPause()
-        for (contact in contacts!!) {
-            Cache().saveBoolean(context, contact.id.toString(), contact.chosen)
-        }
+        ContactsInCache.saveContactsInCache(context, contacts)
+        Cache().saveString(context, getString(R.string.filter), binding.search.text.toString())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        for (contact in contacts!!) {
-            val status = Cache().loadBoolean(context, contact.id.toString())
-            contact.chosen = status
-        }
-
         dataModel.chosenContacts = mutableMapOf()
         adapter = contacts?.let { ContactListViewAdapter(context, it, dataModel) }
         binding.contacts.adapter = adapter
 
         setListeners()
+        Cache().loadString(context, getString(R.string.filter)).apply {
+            if (this != null && this.trim() != "") {
+                binding.search.setText(this)
+            }
+        }
     }
 
     private fun setListeners() {

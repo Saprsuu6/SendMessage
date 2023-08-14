@@ -28,14 +28,24 @@ class MainActivity : AppCompatActivity() {
         Permissions.setPermissions(this)
 
         openFrag(R.id.message, Message.newInstance())
-        val pool = Executors.newFixedThreadPool(1)
-        pool.execute { dataLoad() } // make parallel thread in pool
+
+        ContactsInCache.loadContactsFromCache(applicationContext).apply {
+            if (this == null) {
+                val pool = Executors.newFixedThreadPool(1)
+                pool.execute { dataLoad() } // make parallel thread in pool
+            } else {
+                openFrag(R.id.contactsList, ContactsList.newInstance(this))
+            }
+        }
 
         setListeners()
     }
 
     private fun dataLoad() {
-        runOnUiThread { binding.shimmerLayout?.startShimmerAnimation() } // animation before loading
+        runOnUiThread { // animation before loading
+            binding.shimmerLayout?.startShimmerAnimation()
+            binding.shimmerLayout?.visibility = View.VISIBLE
+        }
 
         contacts = Contacts.getContactsList(this)
         openFrag(R.id.contactsList, ContactsList.newInstance(contacts))
