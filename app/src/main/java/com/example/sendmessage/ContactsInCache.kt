@@ -79,7 +79,7 @@ class ContactsInCache {
             }
         }
 
-        fun loadContactsFromCache(context: Context): ArrayList<Contact>? {
+        fun loadContactsFromCache(context: Context, dataModel: DataModel): ArrayList<Contact>? {
             Cache().loadBoolean(context, context.getString(R.string.isExist)).apply {
                 return if (this) {
                     val contacts = ArrayList<Contact>()
@@ -142,6 +142,10 @@ class ContactsInCache {
                         val isChosen = Cache().loadBoolean(
                             context, context.getString(R.string.chose) + contactCounter
                         )
+
+                        if (isChosen) {
+                            dataModel.chosenContacts[contactId] = true
+                        }
 
                         contacts.add(
                             Contact(

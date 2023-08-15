@@ -52,7 +52,6 @@ class ContactsList : Fragment(), Filterable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dataModel.chosenContacts = mutableMapOf()
         adapter = contacts?.let { ContactListViewAdapter(context, it, dataModel) }
         binding.contacts.adapter = adapter
 
@@ -75,6 +74,7 @@ class ContactsList : Fragment(), Filterable {
                 Cache().saveBoolean(context, contact.id.toString(), false)
                 contact.chosen = false
             }
+            binding.search.text.clear()
 
             adapter?.notifyDataSetChanged()
             binding.contacts.adapter = adapter
@@ -89,8 +89,7 @@ class ContactsList : Fragment(), Filterable {
         @JvmStatic
         fun newInstance(contacts: ArrayList<Contact>?) = ContactsList().apply {
             arguments = Bundle().apply {
-                val json = Gson().toJson(contacts)
-                putString("contacts", json)
+                putString("contacts", Gson().toJson(contacts))
             }
         }
     }

@@ -8,6 +8,6 @@ open class DataModel : ViewModel() {
         MutableLiveData<String>()
     }
 
-    lateinit var chosenContacts: MutableMap<Int, Boolean>
+    var chosenContacts: MutableMap<Int, Boolean> = mutableMapOf()
     lateinit var clearFunction: () -> Unit
 }

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">SendMessage</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sendMessage">Send message</string>
     <string name="uncheckAll">Uncheck all</string>
@@ -39,4 +39,29 @@
     <string name="emailsValue">contactEmailsValue</string>
 
     <string name="filter">filter</string>
+
+    <string name="contactsToService">contacts</string>
+    <string name="messageToService">message</string>
+
+    <string name="smsChannelName">Regular send</string>
+    <string name="smsChannelDescription">This is for regular send</string>
+
+    <string name="isWithTimer">timer</string>
+    <string name="interval">interval</string>
+    <string name="sendEmail">interval</string>
+    <string name="sendSmsMmsType">vnd.android-dir/mms-sms</string>
+    <string name="myMail">coffee.2002@gmail.com</string>
+    <string name="myMailPassword">gamKu0-muzmar-foobar</string>
+    <string name="subject">Message from Andrew Saprigin</string>
+
+    <!--    send email info-->
+    <string name="appEmail">coffeei.2002@gmail.com</string>
+    <string name="appEmailPassword">fzophoxkuufomlhu</string>
+    <string name="mailSmtpAuth">mail.smtp.auth</string>
+    <string name="mailSmtpStarttlsEnable">mail.smtp.starttls.enable</string>
+    <string name="mailSmtpHost">mail.smtp.host</string>
+    <string name="mailSmtpPort">mail.smtp.port</string>
+    <string name="flagTrue">true</string>
+    <string name="smtpGmailCom">smtp.gmail.com</string>
+    <string name="smtpGmailComPort">587</string>
 </resources>

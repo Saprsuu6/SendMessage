@@ -2,12 +2,17 @@ package com.example.sendmessage
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 
 class Permissions {
     companion object {
         private const val contactsPermission: String = Manifest.permission.READ_CONTACTS
         private const val sendSmsPermission: String = Manifest.permission.SEND_SMS
+
+        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+        private const val notificationPermissions: String = Manifest.permission.POST_NOTIFICATIONS
         const val requestCode: Int = 1
 
         fun checkSmsPermission(activity: MainActivity): Boolean {
@@ -22,6 +27,21 @@ class Permissions {
             )
         }
 
+        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+        fun checkNotificationsPermission(activity: MainActivity): Boolean {
+            return ActivityCompat.checkSelfPermission(
+                activity, Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+
+        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+        fun requestNotificationsPermission(activity: MainActivity) {
+            ActivityCompat.requestPermissions(
+                activity, arrayOf(Manifest.permission.POST_NOTIFICATIONS), requestCode
+            )
+        }
+
+        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
         fun setPermissions(activity: MainActivity) {
             val permissions = getPermissions()
             if (!checkPermission(activity)) {
@@ -29,6 +49,7 @@ class Permissions {
             }
         }
 
+        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
         private fun checkPermission(activity: MainActivity): Boolean {
             val permissions = getPermissions()
             for (permission in permissions) {
@@ -41,8 +62,11 @@ class Permissions {
             return true
         }
 
+        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
         private fun getPermissions(): Array<String> {
-            return arrayOf(contactsPermission, sendSmsPermission)
+            return arrayOf(
+                contactsPermission, sendSmsPermission, notificationPermissions
+            )
         }
     }
 }

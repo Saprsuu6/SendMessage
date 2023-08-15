@@ -1,5 +1,7 @@
 package com.example.sendmessage
 
+import java.io.Serializable
+
 data class Contact(
     var id: Int,
     var name: String,
@@ -7,4 +9,4 @@ data class Contact(
     var emails: MutableMap<String, String>?,
     var photoUri: String?,
     var chosen: Boolean = false
-)
+) : Serializable
