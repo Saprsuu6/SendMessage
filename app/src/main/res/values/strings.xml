@@ -39,9 +39,8 @@
     <string name="emailsValue">contactEmailsValue</string>
 
     <string name="filter">filter</string>
-
-    <string name="contactsToService">contacts</string>
-    <string name="messageToService">message</string>
+    <string name="contacts">contacts</string>
+    <string name="message">message</string>
 
     <string name="smsChannelName">Regular send</string>
     <string name="smsChannelDescription">This is for regular send</string>
@@ -64,4 +63,7 @@
     <string name="flagTrue">true</string>
     <string name="smtpGmailCom">smtp.gmail.com</string>
     <string name="smtpGmailComPort">587</string>
+
+    <string name="mailingListMessageOff">On mail list</string>
+    <string name="mailingListMessageOn">Off mail list</string>
 </resources>

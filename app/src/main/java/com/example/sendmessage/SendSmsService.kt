@@ -36,8 +36,8 @@ class SendSmsService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val contacts: ArrayList<Contact>?
 
-        val message = intent?.getStringExtra(getString(R.string.messageToService))
-        val extras = intent?.getStringExtra(getString(R.string.contactsToService))
+        val message = intent?.getStringExtra(getString(R.string.message))
+        val extras = intent?.getStringExtra(getString(R.string.contacts))
         val timer = intent?.getBooleanExtra(getString(R.string.isWithTimer), false)
         val interval = intent?.getLongExtra(getString(R.string.interval), defaultInterval)
 

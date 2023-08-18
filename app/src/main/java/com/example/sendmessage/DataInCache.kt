@@ -2,7 +2,7 @@ package com.example.sendmessage
 
 import android.content.Context
 
-class ContactsInCache {
+class DataInCache {
     companion object {
         fun saveContactsInCache(context: Context, contacts: ArrayList<Contact>?) {
             Cache().saveBoolean(context, context.getString(R.string.isExist), true)
@@ -159,6 +159,10 @@ class ContactsInCache {
                     null
                 }
             }
+        }
+
+        fun loadMessage(context: Context): String? {
+            return Cache().loadString(context, context.resources.getString(R.string.message))
         }
     }
 }

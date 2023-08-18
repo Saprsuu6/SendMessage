@@ -28,9 +28,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         Permissions.setPermissions(this)
-        openFrag(R.id.message, Message.newInstance())
 
-        ContactsInCache.loadContactsFromCache(applicationContext, dataModel).apply {
+        DataInCache.loadMessage(applicationContext).apply {
+            if (this == null || this == "") {
+                openFrag(R.id.message, Message.newInstance())
+            } else {
+                openFrag(R.id.message, Message.newInstance(this))
+            }
+        }
+
+        DataInCache.loadContactsFromCache(applicationContext, dataModel).apply {
             if (this == null) {
                 Executors.newFixedThreadPool(1).execute {
                     dataLoad()
@@ -118,8 +125,8 @@ class MainActivity : AppCompatActivity() {
 
         val message = dataModel.message.value?.toString()?.trim()
         val intent = Intent(this, SendSmsService::class.java)
-        intent.putExtra(getString(R.string.contactsToService), Gson().toJson(contactsToSend))
-        intent.putExtra(getString(R.string.messageToService), message)
+        intent.putExtra(getString(R.string.contacts), Gson().toJson(contactsToSend))
+        intent.putExtra(getString(R.string.message), message)
         startService(intent)
     }
 

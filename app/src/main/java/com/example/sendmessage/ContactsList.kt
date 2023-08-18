@@ -27,8 +27,8 @@ class ContactsList : Fragment(), Filterable {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        if (container != null) {
-            context = container.context
+        container?.let {
+            context = it.context
         }
 
         binding = FragmentContactsListBinding.inflate(inflater)
@@ -46,7 +46,7 @@ class ContactsList : Fragment(), Filterable {
 
     override fun onPause() {
         super.onPause()
-        ContactsInCache.saveContactsInCache(context, contacts)
+        DataInCache.saveContactsInCache(context, contacts)
         Cache().saveString(context, getString(R.string.filter), binding.search.text.toString())
     }
 
@@ -89,7 +89,9 @@ class ContactsList : Fragment(), Filterable {
         @JvmStatic
         fun newInstance(contacts: ArrayList<Contact>?) = ContactsList().apply {
             arguments = Bundle().apply {
-                putString("contacts", Gson().toJson(contacts))
+                putString(
+                    "contacts", Gson().toJson(contacts)
+                )
             }
         }
     }
