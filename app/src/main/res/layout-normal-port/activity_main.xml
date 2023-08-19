@@ -83,16 +83,17 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
-            android:text="@string/sendMessage" />
+            android:text="@string/sendMessage"
+            style="?android:attr/buttonBarButtonStyle" />
 
-        <ToggleButton
+        <Button
             android:id="@+id/mailingListMessage"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
-            android:textOff="@string/mailingListMessageOff"
-            android:textOn="@string/mailingListMessageOn" />
+            style="?android:attr/buttonBarButtonStyle"
+            android:text="@string/mailingListMessageOff" />
 
     </LinearLayout>
 

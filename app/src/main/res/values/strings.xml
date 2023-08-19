@@ -66,4 +66,10 @@
 
     <string name="mailingListMessageOff">On mail list</string>
     <string name="mailingListMessageOn">Off mail list</string>
+
+    <string name="mailingListMessageOffToolTrip">Set how long it will take to mail list</string>
+    <string name="mailingListMessageOnToolTrip">Mail list every</string>
+
+    <string name="timerCache">timerCache</string>
+    <string name="timerError">Choose time greater than 5 minutes because this is spam</string>
 </resources>

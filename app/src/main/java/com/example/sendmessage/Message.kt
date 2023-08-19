@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.sendmessage.databinding.FragmentMessageBinding
 
+private const val ARG_MESSAGE = "ARG_MESSAGE"
+
 class Message : Fragment() {
     private lateinit var binding: FragmentMessageBinding
     private val dataModel: DataModel by activityViewModels()
@@ -65,7 +67,7 @@ class Message : Fragment() {
         @JvmStatic
         fun newInstance(message: String?) = Message().apply {
             arguments = Bundle().apply {
-                putString("message", message)
+                putString(ARG_MESSAGE, message)
             }
         }
 

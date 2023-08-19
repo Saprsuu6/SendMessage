@@ -1,5 +1,6 @@
 package com.example.sendmessage
 
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -10,9 +11,11 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
 import com.example.sendmessage.databinding.ActivityMainBinding
 import com.google.gson.Gson
+import java.util.Calendar
 import java.util.concurrent.Executors
 
 
@@ -20,6 +23,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val dataModel: DataModel by viewModels()
     private var contacts: ArrayList<Contact>? = null
+    private var timerIsPressed: Boolean? = null
+    private var calendar = Calendar.getInstance()
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +54,43 @@ class MainActivity : AppCompatActivity() {
         }
 
         setListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Cache().loadLong(applicationContext, getString(R.string.timerCache)).apply {
+            binding.mailingListMessage?.let {
+                if (this == 0L) {
+                    TooltipCompat.setTooltipText(
+                        it, getString(R.string.mailingListMessageOffToolTrip)
+                    )
+                    binding.mailingListMessage?.text = getString(R.string.mailingListMessageOff)
+                    timerIsPressed = false
+                } else {
+                    calendar.timeInMillis = this
+
+                    TooltipCompat.setTooltipText(
+                        it,
+                        getString(R.string.mailingListMessageOnToolTrip) + " ${calendar.get(Calendar.HOUR_OF_DAY)} hours and ${
+                            calendar.get(
+                                Calendar.MINUTE
+                            )
+                        } minutes"
+                    )
+                    binding.mailingListMessage?.text = getString(R.string.mailingListMessageOn)
+                    timerIsPressed = true
+                }
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (timerIsPressed == true) {
+            Cache().saveLong(
+                applicationContext, getString(R.string.timerCache), calendar.timeInMillis
+            )
+        }
     }
 
     private fun dataLoad() {
@@ -104,6 +146,52 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, getString(R.string.emptyMessageError), Toast.LENGTH_SHORT)
                     .show()
+            }
+        }
+
+        binding.mailingListMessage?.setOnClickListener {
+            if (timerIsPressed == false) {
+                TimePickerDialog(
+                    this, { _, hours, minutes ->
+                        calendar.set(Calendar.HOUR_OF_DAY, hours)
+                        calendar.set(Calendar.MINUTE, minutes)
+
+                        if (hours == 0 && minutes <= 5) {
+                            Toast.makeText(
+                                applicationContext,
+                                getString(R.string.timerError),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            binding.mailingListMessage?.let {
+                                TooltipCompat.setTooltipText(
+                                    it,
+                                    getString(R.string.mailingListMessageOnToolTrip) + " $hours hours and $minutes minutes"
+                                )
+                            }
+                            // save in cache
+                            Cache().saveLong(
+                                applicationContext,
+                                getString(R.string.timerCache),
+                                calendar.timeInMillis
+                            )
+                            binding.mailingListMessage?.text =
+                                getString(R.string.mailingListMessageOn)
+                            timerIsPressed = true
+                        }
+                    }, Calendar.HOUR_OF_DAY, Calendar.MINUTE, true
+                ).show()
+                binding.mailingListMessage?.text = getString(R.string.mailingListMessageOff)
+            } else {
+                binding.mailingListMessage?.let {
+                    TooltipCompat.setTooltipText(
+                        it, getString(R.string.mailingListMessageOffToolTrip)
+                    )
+                }
+                // remove from cache
+                Cache().remove(applicationContext, getString(R.string.timerCache))
+                binding.mailingListMessage?.text = getString(R.string.mailingListMessageOff)
+                timerIsPressed = false
             }
         }
     }

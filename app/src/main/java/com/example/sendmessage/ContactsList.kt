@@ -15,6 +15,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 
+private const val ARG_CONTACTS = "ARG_CONTACTS"
+
 class ContactsList : Fragment(), Filterable {
     private lateinit var binding: FragmentContactsListBinding
     private var contacts: ArrayList<Contact>? = null
@@ -38,7 +40,7 @@ class ContactsList : Fragment(), Filterable {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            val json = it.getString("contacts")
+            val json = it.getString(ARG_CONTACTS)
             val typeToken = object : TypeToken<ArrayList<Contact>>() {}.type
             contacts = Gson().fromJson<ArrayList<Contact>>(json, typeToken)
         }
@@ -90,7 +92,7 @@ class ContactsList : Fragment(), Filterable {
         fun newInstance(contacts: ArrayList<Contact>?) = ContactsList().apply {
             arguments = Bundle().apply {
                 putString(
-                    "contacts", Gson().toJson(contacts)
+                    ARG_CONTACTS, Gson().toJson(contacts)
                 )
             }
         }

@@ -9,8 +9,9 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.CountDownTimer
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.os.StrictMode
 import android.telephony.SmsManager
 import android.util.Log
@@ -18,7 +19,6 @@ import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.Properties
-import java.util.concurrent.Executors
 import javax.mail.Authenticator
 import javax.mail.Message
 import javax.mail.PasswordAuthentication
@@ -31,7 +31,14 @@ class SendSmsService : Service() {
     private lateinit var send: Send
     private val channelId: String = "smsChanel"
     private val notifyId = 395
-    private val defaultInterval: Long = 86400000
+    private val defaultInterval: Long = 1000
+    private lateinit var mainHandler: Handler
+    private val updateTask = object : Runnable {
+        override fun run() {
+            send.run()
+            mainHandler.postDelayed(this, defaultInterval)
+        }
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val contacts: ArrayList<Contact>?
@@ -45,9 +52,12 @@ class SendSmsService : Service() {
         contacts = Gson().fromJson(extras, typeToken)
         send = contacts?.let { Send(applicationContext, it, message!!) }!!
 
+        mainHandler = Handler(Looper.getMainLooper())
+
         if (timer == true && interval != null) {
             sendStartNotification()
-            getTimer(interval).start()
+//            getTimer(interval).start()
+            mainHandler.post(updateTask)
         } else {
             send.run()
         }
@@ -57,25 +67,25 @@ class SendSmsService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? = null
 
-    private fun getTimer(interval: Long, second: Long = 1000): CountDownTimer {
-        return object : CountDownTimer(interval, second) {
-            override fun onFinish() {
-                Toast.makeText(
-                    applicationContext, "Finish", Toast.LENGTH_SHORT
-                ).show()
-
-                try {
-                    Executors.newFixedThreadPool(1).execute { getTimer(interval) }
-                } catch (e: Exception) {
-                    println(e.message)
-                }
-            }
-
-            override fun onTick(p0: Long) {
-                send.run()
-            }
-        }
-    }
+//    private fun getTimer(interval: Long, second: Long = 1000): CountDownTimer {
+//        return object : CountDownTimer(interval, second) {
+//            override fun onFinish() {
+//                Toast.makeText(
+//                    applicationContext, "Finish", Toast.LENGTH_SHORT
+//                ).show()
+//
+//                try {
+//                    Executors.newFixedThreadPool(1).execute { getTimer(interval) }
+//                } catch (e: Exception) {
+//                    println(e.message)
+//                }
+//            }
+//
+//            override fun onTick(p0: Long) {
+//                send.run()
+//            }
+//        }
+//    }
 
     private fun sendStartNotification() {
         createChannel()
