@@ -32,11 +32,12 @@ class SendSmsService : Service() {
     private val channelId: String = "smsChanel"
     private val notifyId = 395
     private val defaultInterval: Long = 1000
+    private var realInterval: Long? = null
     private lateinit var mainHandler: Handler
     private val updateTask = object : Runnable {
         override fun run() {
             send.run()
-            mainHandler.postDelayed(this, defaultInterval)
+            realInterval?.let { mainHandler.postDelayed(this, it) }
         }
     }
 
@@ -46,7 +47,7 @@ class SendSmsService : Service() {
         val message = intent?.getStringExtra(getString(R.string.message))
         val extras = intent?.getStringExtra(getString(R.string.contacts))
         val timer = intent?.getBooleanExtra(getString(R.string.isWithTimer), false)
-        val interval = intent?.getLongExtra(getString(R.string.interval), defaultInterval)
+        realInterval = intent?.getLongExtra(getString(R.string.interval), defaultInterval)
 
         val typeToken = object : TypeToken<ArrayList<Contact>>() {}.type
         contacts = Gson().fromJson(extras, typeToken)
@@ -54,9 +55,8 @@ class SendSmsService : Service() {
 
         mainHandler = Handler(Looper.getMainLooper())
 
-        if (timer == true && interval != null) {
+        if (timer == true && realInterval != null) {
             sendStartNotification()
-//            getTimer(interval).start()
             mainHandler.post(updateTask)
         } else {
             send.run()
@@ -66,26 +66,6 @@ class SendSmsService : Service() {
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
-
-//    private fun getTimer(interval: Long, second: Long = 1000): CountDownTimer {
-//        return object : CountDownTimer(interval, second) {
-//            override fun onFinish() {
-//                Toast.makeText(
-//                    applicationContext, "Finish", Toast.LENGTH_SHORT
-//                ).show()
-//
-//                try {
-//                    Executors.newFixedThreadPool(1).execute { getTimer(interval) }
-//                } catch (e: Exception) {
-//                    println(e.message)
-//                }
-//            }
-//
-//            override fun onTick(p0: Long) {
-//                send.run()
-//            }
-//        }
-//    }
 
     private fun sendStartNotification() {
         createChannel()

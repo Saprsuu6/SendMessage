@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private var contacts: ArrayList<Contact>? = null
     private var timerIsPressed: Boolean? = null
     private var calendar = Calendar.getInstance()
+    private var intentForService: Intent? = null
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -156,33 +157,53 @@ class MainActivity : AppCompatActivity() {
                         calendar.set(Calendar.HOUR_OF_DAY, hours)
                         calendar.set(Calendar.MINUTE, minutes)
 
-                        if (hours == 0 && minutes <= 5) {
-                            Toast.makeText(
-                                applicationContext,
-                                getString(R.string.timerError),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            binding.mailingListMessage?.let {
-                                TooltipCompat.setTooltipText(
-                                    it,
-                                    getString(R.string.mailingListMessageOnToolTrip) + " $hours hours and $minutes minutes"
-                                )
-                            }
-                            // save in cache
-                            Cache().saveLong(
-                                applicationContext,
-                                getString(R.string.timerCache),
-                                calendar.timeInMillis
+//                        if (hours == 0 && minutes <= 5) {
+//                            Toast.makeText(
+//                                applicationContext,
+//                                getString(R.string.timerError),
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                        } else {
+//                            binding.mailingListMessage?.let {
+//                                TooltipCompat.setTooltipText(
+//                                    it,
+//                                    getString(R.string.mailingListMessageOnToolTrip) + " $hours hours and $minutes minutes"
+//                                )
+//                            }
+//                            // save in cache
+//                            Cache().saveLong(
+//                                applicationContext,
+//                                getString(R.string.timerCache),
+//                                calendar.timeInMillis
+//                            )
+//                            binding.mailingListMessage?.text =
+//                                getString(R.string.mailingListMessageOn)
+//                            timerIsPressed = true
+//                        }
+
+                        binding.mailingListMessage?.let {
+                            TooltipCompat.setTooltipText(
+                                it,
+                                getString(R.string.mailingListMessageOnToolTrip) + " $hours hours and $minutes minutes"
                             )
-                            binding.mailingListMessage?.text =
-                                getString(R.string.mailingListMessageOn)
-                            timerIsPressed = true
                         }
+                        // save in cache
+                        Cache().saveLong(
+                            applicationContext,
+                            getString(R.string.timerCache),
+                            calendar.timeInMillis
+                        )
+                        binding.mailingListMessage?.text = getString(R.string.mailingListMessageOn)
+                        timerIsPressed = true
                     }, Calendar.HOUR_OF_DAY, Calendar.MINUTE, true
                 ).show()
                 binding.mailingListMessage?.text = getString(R.string.mailingListMessageOff)
             } else {
+                intentForService?.let {
+                    stopService(it)
+                    intentForService = null
+                }
+
                 binding.mailingListMessage?.let {
                     TooltipCompat.setTooltipText(
                         it, getString(R.string.mailingListMessageOffToolTrip)
@@ -212,10 +233,26 @@ class MainActivity : AppCompatActivity() {
         }
 
         val message = dataModel.message.value?.toString()?.trim()
-        val intent = Intent(this, SendSmsService::class.java)
-        intent.putExtra(getString(R.string.contacts), Gson().toJson(contactsToSend))
-        intent.putExtra(getString(R.string.message), message)
-        startService(intent)
+        intentForService = Intent(this, SendSmsService::class.java)
+        intentForService!!.putExtra(getString(R.string.contacts), Gson().toJson(contactsToSend))
+        intentForService!!.putExtra(getString(R.string.message), message)
+
+        if (timerIsPressed == true) {
+            if (calendar.get(Calendar.HOUR_OF_DAY) == 0 && calendar.get(Calendar.MINUTE) <= 5) {
+                Toast.makeText(
+                    applicationContext, getString(R.string.timerError), Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                val hours: Long = calendar.get(Calendar.HOUR_OF_DAY) * 3600000L
+                val minutes: Long = calendar.get(Calendar.MINUTE) * 60000L
+                val totalMilliseconds: Long = hours + minutes
+                intentForService!!.putExtra(getString(R.string.isWithTimer), true)
+                intentForService!!.putExtra(getString(R.string.interval), totalMilliseconds)
+                startService(intentForService)
+            }
+        } else {
+            startService(intent)
+        }
     }
 
     override fun onRequestPermissionsResult(
