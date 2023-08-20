@@ -21,6 +21,7 @@
             android:id="@+id/shimmerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:shimmer_animation_duration="1200">
 
             <LinearLayout
@@ -61,19 +62,39 @@
         android:layout_margin="10dp"
         android:background="@drawable/fragment"
         android:elevation="2dp"
-        app:layout_constraintBottom_toTopOf="@+id/sendMessage"
+        app:layout_constraintBottom_toTopOf="@+id/mainButtons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/info" />
 
-    <Button
-        android:id="@+id/sendMessage"
+    <LinearLayout
+        android:id="@+id/mainButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="@string/sendMessage"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/sendMessage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:text="@string/sendMessage"
+            style="?android:attr/buttonBarButtonStyle" />
+
+        <Button
+            android:id="@+id/mailingListMessage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
+            android:text="@string/mailingListMessageOff" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

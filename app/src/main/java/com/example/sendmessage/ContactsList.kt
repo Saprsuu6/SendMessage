@@ -15,6 +15,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 
+private const val ARG_CONTACTS = "ARG_CONTACTS"
+
 class ContactsList : Fragment(), Filterable {
     private lateinit var binding: FragmentContactsListBinding
     private var contacts: ArrayList<Contact>? = null
@@ -27,8 +29,8 @@ class ContactsList : Fragment(), Filterable {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        if (container != null) {
-            context = container.context
+        container?.let {
+            context = it.context
         }
 
         binding = FragmentContactsListBinding.inflate(inflater)
@@ -38,7 +40,7 @@ class ContactsList : Fragment(), Filterable {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            val json = it.getString("contacts")
+            val json = it.getString(ARG_CONTACTS)
             val typeToken = object : TypeToken<ArrayList<Contact>>() {}.type
             contacts = Gson().fromJson<ArrayList<Contact>>(json, typeToken)
         }
@@ -46,23 +48,21 @@ class ContactsList : Fragment(), Filterable {
 
     override fun onPause() {
         super.onPause()
-        for (contact in contacts!!) {
-            Cache().saveBoolean(context, contact.id.toString(), contact.chosen)
-        }
+        DataInCache.saveContactsInCache(context, contacts)
+        Cache().saveString(context, getString(R.string.filter), binding.search.text.toString())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        for (contact in contacts!!) {
-            val status = Cache().loadBoolean(context, contact.id.toString())
-            contact.chosen = status
-        }
-
-        dataModel.chosenContacts = mutableMapOf()
         adapter = contacts?.let { ContactListViewAdapter(context, it, dataModel) }
         binding.contacts.adapter = adapter
 
         setListeners()
+        Cache().loadString(context, getString(R.string.filter)).apply {
+            if (this != null && this.trim() != "") {
+                binding.search.setText(this)
+            }
+        }
     }
 
     private fun setListeners() {
@@ -76,6 +76,7 @@ class ContactsList : Fragment(), Filterable {
                 Cache().saveBoolean(context, contact.id.toString(), false)
                 contact.chosen = false
             }
+            binding.search.text.clear()
 
             adapter?.notifyDataSetChanged()
             binding.contacts.adapter = adapter
@@ -90,8 +91,9 @@ class ContactsList : Fragment(), Filterable {
         @JvmStatic
         fun newInstance(contacts: ArrayList<Contact>?) = ContactsList().apply {
             arguments = Bundle().apply {
-                val json = Gson().toJson(contacts)
-                putString("contacts", json)
+                putString(
+                    ARG_CONTACTS, Gson().toJson(contacts)
+                )
             }
         }
     }
