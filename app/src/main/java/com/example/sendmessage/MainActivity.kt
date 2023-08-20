@@ -94,6 +94,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        intentForService?.let {
+            stopService(it)
+            intentForService = null
+        }
+    }
+
     private fun dataLoad() {
         runOnUiThread { // animation before loading
             binding.shimmerLayout?.startShimmerAnimation()
@@ -156,30 +164,6 @@ class MainActivity : AppCompatActivity() {
                     this, { _, hours, minutes ->
                         calendar.set(Calendar.HOUR_OF_DAY, hours)
                         calendar.set(Calendar.MINUTE, minutes)
-
-//                        if (hours == 0 && minutes <= 5) {
-//                            Toast.makeText(
-//                                applicationContext,
-//                                getString(R.string.timerError),
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                        } else {
-//                            binding.mailingListMessage?.let {
-//                                TooltipCompat.setTooltipText(
-//                                    it,
-//                                    getString(R.string.mailingListMessageOnToolTrip) + " $hours hours and $minutes minutes"
-//                                )
-//                            }
-//                            // save in cache
-//                            Cache().saveLong(
-//                                applicationContext,
-//                                getString(R.string.timerCache),
-//                                calendar.timeInMillis
-//                            )
-//                            binding.mailingListMessage?.text =
-//                                getString(R.string.mailingListMessageOn)
-//                            timerIsPressed = true
-//                        }
 
                         binding.mailingListMessage?.let {
                             TooltipCompat.setTooltipText(
