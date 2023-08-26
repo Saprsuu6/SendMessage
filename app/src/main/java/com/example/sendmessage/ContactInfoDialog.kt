@@ -17,6 +17,7 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import com.example.sendmessage.databinding.ContactInfoBinding
 import com.example.sendmessage.databinding.InfoFieldBinding
+import com.example.sendmessage.models.Contact
 
 
 class ContactInfoDialog(context: Context, contact: Contact) {

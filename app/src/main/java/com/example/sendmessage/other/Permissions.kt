@@ -1,10 +1,11 @@
-package com.example.sendmessage
+package com.example.sendmessage.other
 
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import com.example.sendmessage.MainActivity
 
 class Permissions {
     companion object {

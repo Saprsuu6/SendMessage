@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds.Email
 import android.provider.ContactsContract.CommonDataKinds.Phone
+import com.example.sendmessage.models.Contact
 
 
 class Contacts {

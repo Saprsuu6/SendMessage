@@ -1,6 +1,7 @@
-package com.example.sendmessage
+package com.example.sendmessage.other
 
 import android.content.Context
+import com.example.sendmessage.R
 
 class Cache {
     fun saveBoolean(context: Context, key: String, value: Boolean) {

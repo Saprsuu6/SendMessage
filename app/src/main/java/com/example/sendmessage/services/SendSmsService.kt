@@ -1,4 +1,4 @@
-package com.example.sendmessage
+package com.example.sendmessage.services
 
 import android.annotation.SuppressLint
 import android.app.Notification
@@ -16,6 +16,8 @@ import android.os.StrictMode
 import android.telephony.SmsManager
 import android.util.Log
 import android.widget.Toast
+import com.example.sendmessage.R
+import com.example.sendmessage.models.Contact
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.Properties
