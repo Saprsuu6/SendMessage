@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.example.sendmessage.databinding.ContactsListItemBinding
+import com.example.sendmessage.models.Contact
+import com.example.sendmessage.models.DataModel
 
 class ContactListViewAdapter(
     private val context: Context,

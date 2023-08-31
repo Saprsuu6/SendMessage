@@ -14,6 +14,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
 import com.example.sendmessage.databinding.ActivityMainBinding
+import com.example.sendmessage.fragments.ContactsList
+import com.example.sendmessage.fragments.Message
+import com.example.sendmessage.models.Contact
+import com.example.sendmessage.models.DataModel
+import com.example.sendmessage.services.Cache
+import com.example.sendmessage.services.Contacts
+import com.example.sendmessage.services.DataInCache
+import com.example.sendmessage.services.Permissions
+import com.example.sendmessage.services.SendSmsService
 import com.google.gson.Gson
 import java.util.Calendar
 import java.util.concurrent.Executors

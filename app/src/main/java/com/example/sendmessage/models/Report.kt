@@ -1,4 +1,4 @@
-package com.example.sendmessage
+package com.example.sendmessage.models
 
 import java.util.Date
 

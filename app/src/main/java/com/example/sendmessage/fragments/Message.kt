@@ -1,4 +1,4 @@
-package com.example.sendmessage
+package com.example.sendmessage.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.example.sendmessage.services.Cache
+import com.example.sendmessage.R
 import com.example.sendmessage.databinding.FragmentMessageBinding
+import com.example.sendmessage.models.DataModel
 
 private const val ARG_MESSAGE = "ARG_MESSAGE"
 

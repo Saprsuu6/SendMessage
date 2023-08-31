@@ -1,9 +1,11 @@
-package com.example.sendmessage
+package com.example.sendmessage.services
 
 import android.annotation.SuppressLint
 import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds.Email
 import android.provider.ContactsContract.CommonDataKinds.Phone
+import com.example.sendmessage.MainActivity
+import com.example.sendmessage.models.Contact
 
 
 class Contacts {
