@@ -1,4 +1,4 @@
-package com.example.sendmessage.models
+package com.example.sendmessage
 
 data class Contact(
     var id: Int,

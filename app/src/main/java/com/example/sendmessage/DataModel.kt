@@ -1,4 +1,4 @@
-package com.example.sendmessage.models
+package com.example.sendmessage
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

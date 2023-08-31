@@ -1,4 +1,4 @@
-package com.example.sendmessage.services
+package com.example.sendmessage
 
 import android.annotation.SuppressLint
 import android.app.Notification
@@ -16,10 +16,10 @@ import android.os.StrictMode
 import android.telephony.SmsManager
 import android.util.Log
 import android.widget.Toast
-import com.example.sendmessage.R
-import com.example.sendmessage.models.Contact
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import java.util.Date
 import java.util.Properties
 import javax.mail.Authenticator
 import javax.mail.Message
@@ -44,15 +44,13 @@ class SendSmsService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val contacts: ArrayList<Contact>?
-
         val message = intent?.getStringExtra(getString(R.string.message))
         val extras = intent?.getStringExtra(getString(R.string.contacts))
         val timer = intent?.getBooleanExtra(getString(R.string.isWithTimer), false)
         realInterval = intent?.getLongExtra(getString(R.string.interval), defaultInterval)
 
         val typeToken = object : TypeToken<ArrayList<Contact>>() {}.type
-        contacts = Gson().fromJson(extras, typeToken)
+        val contacts: ArrayList<Contact>? = Gson().fromJson(extras, typeToken)
         send = contacts?.let { Send(applicationContext, it, message!!) }!!
 
         mainHandler = Handler(Looper.getMainLooper())
@@ -102,12 +100,9 @@ class SendSmsService : Service() {
         private val contacts: ArrayList<Contact>,
         private val message: String
     ) : Runnable {
+        private var gson: Gson = GsonBuilder().create()
+        private val reportIntent: Intent = Intent("sendMessageReport")
         private var smsPendingIntent: PendingIntent
-        private var smsManager: SmsManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            context.getSystemService(SmsManager::class.java)
-        } else {
-            SmsManager.getDefault()
-        }
 
         init {
             val smsIntent = Intent(Intent.ACTION_SEND)
@@ -115,6 +110,12 @@ class SendSmsService : Service() {
             smsPendingIntent = PendingIntent.getBroadcast(
                 context, 0, smsIntent, PendingIntent.FLAG_IMMUTABLE
             )
+        }
+
+        private var smsManager: SmsManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            context.getSystemService(SmsManager::class.java)
+        } else {
+            SmsManager.getDefault()
         }
 
         private fun sendSms(phone: String) {
@@ -185,6 +186,27 @@ class SendSmsService : Service() {
                             sendEmail(email.key)
                         }
                     }
+
+                    // region send broadcast
+                    val phones = gson.toJson(contact.phones)
+                    val emails = gson.toJson(contact.emails)
+                    val report = Report(
+                        name = contact.name,
+                        phoneNumbers = phones,
+                        emails = emails,
+                        photoUri = contact.photoUri,
+                        dateSend = Date()
+                    )
+
+                    val reportToJson = gson.toJson(report)
+                    reportIntent.putExtra("report", reportToJson)
+                    try {
+                        context.sendBroadcast(reportIntent) // send broadcast to another app
+                    } catch (e: Exception) {
+                        Log.println(Log.ERROR, "Send broadcast error", e.message.toString())
+                    }
+                    context.sendBroadcast(reportIntent) // send broadcast to another app
+                    // endregion
                 } catch (e: java.lang.Exception) {
                     println(e.message)
                 }

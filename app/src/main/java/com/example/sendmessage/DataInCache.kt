@@ -1,9 +1,6 @@
-package com.example.sendmessage.other
+package com.example.sendmessage
 
 import android.content.Context
-import com.example.sendmessage.models.Contact
-import com.example.sendmessage.models.DataModel
-import com.example.sendmessage.R
 
 class DataInCache {
     companion object {

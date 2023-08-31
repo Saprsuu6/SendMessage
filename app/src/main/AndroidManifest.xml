@@ -26,12 +26,11 @@
         tools:ignore="HardcodedDebugMode"
         tools:targetApi="31">
         <service
-            android:name=".services.SendSmsService"
+            android:name=".SendSmsService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="location"
-            android:stopWithTask="false"
-            android:permission="TODO" />
+            android:stopWithTask="false" />
 
         <activity
             android:name=".MainActivity"

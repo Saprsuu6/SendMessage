@@ -1,4 +1,4 @@
-package com.example.sendmessage.fragments
+package com.example.sendmessage
 
 import android.content.Context
 import android.os.Bundle
@@ -10,13 +10,6 @@ import android.widget.Filterable
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.example.sendmessage.other.Cache
-import com.example.sendmessage.models.Contact
-import com.example.sendmessage.ContactInfoDialog
-import com.example.sendmessage.ContactListViewAdapter
-import com.example.sendmessage.other.DataInCache
-import com.example.sendmessage.models.DataModel
-import com.example.sendmessage.R
 import com.example.sendmessage.databinding.FragmentContactsListBinding
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
