@@ -13,7 +13,7 @@ class Contacts {
             ContactsContract.Contacts._ID,
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
             ContactsContract.Contacts.PHOTO_THUMBNAIL_URI,
-            ContactsContract.Contacts.HAS_PHONE_NUMBER
+            ContactsContract.Contacts.HAS_PHONE_NUMBER,
         )
 
         private val PROJECTION_PHONE = arrayOf(

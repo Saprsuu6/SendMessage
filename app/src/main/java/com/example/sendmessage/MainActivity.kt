@@ -131,80 +131,94 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun setListeners() {
-        binding.sendMessage?.setOnClickListener {
-            if (contacts == null || contacts?.size == 0) {
-                Toast.makeText(this, getString(R.string.dataLoadingError), Toast.LENGTH_SHORT)
-                    .show()
-                return@setOnClickListener
-            }
+        binding.apply {
+            sendMessage?.setOnClickListener {
+                if (contacts == null || contacts?.size == 0) {
+                    Toast.makeText(
+                        this@MainActivity, getString(R.string.dataLoadingError), Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
 
-            // region check permissions
-            if (!Permissions.checkSmsPermission(this)) {
-                Permissions.requestSmsPermission(this)
-                return@setOnClickListener
-            }
-            if (!Permissions.checkNotificationsPermission(this)) {
-                Permissions.requestNotificationsPermission(this)
-                return@setOnClickListener
-            }
-            // endregion
+                // region check permissions
+                if (!Permissions.checkSmsPermission(this@MainActivity)) {
+                    Permissions.requestSmsPermission(this@MainActivity)
+                    return@setOnClickListener
+                }
+                if (!Permissions.checkNotificationsPermission(this@MainActivity)) {
+                    Permissions.requestNotificationsPermission(this@MainActivity)
+                    return@setOnClickListener
+                }
+                // endregion
 
-            if (dataModel.message.value?.isNotEmpty() == true) {
-                if (dataModel.chosenContacts.isNotEmpty()) {
-                    Executors.newFixedThreadPool(1).execute {
-                        sendMessage()
-                    } // make parallel thread in pool
-                    dataModel.clearFunction()
+                if (dataModel.message.value?.isNotEmpty() == true) {
+                    if (dataModel.chosenContacts.isNotEmpty()) {
+                        Executors.newFixedThreadPool(1).execute {
+                            sendMessage()
+                        } // make parallel thread in pool
+                        dataModel.clearFunction()
+                    } else {
+                        Toast.makeText(
+                            this@MainActivity,
+                            getString(R.string.noContactsChoseError),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 } else {
                     Toast.makeText(
-                        this, getString(R.string.noContactsChoseError), Toast.LENGTH_SHORT
+                        this@MainActivity, getString(R.string.emptyMessageError), Toast.LENGTH_SHORT
                     ).show()
                 }
-            } else {
-                Toast.makeText(this, getString(R.string.emptyMessageError), Toast.LENGTH_SHORT)
-                    .show()
             }
-        }
+            binding.mailingListMessage?.setOnClickListener {
+                if (timerIsPressed == false) {
+                    TimePickerDialog(
+                        this@MainActivity, { _, hours, minutes ->
+                            calendar.set(Calendar.HOUR_OF_DAY, hours)
+                            calendar.set(Calendar.MINUTE, minutes)
 
-        binding.mailingListMessage?.setOnClickListener {
-            if (timerIsPressed == false) {
-                TimePickerDialog(
-                    this, { _, hours, minutes ->
-                        calendar.set(Calendar.HOUR_OF_DAY, hours)
-                        calendar.set(Calendar.MINUTE, minutes)
-
-                        binding.mailingListMessage?.let {
-                            TooltipCompat.setTooltipText(
-                                it,
-                                getString(R.string.mailingListMessageOnToolTrip) + " $hours hours and $minutes minutes"
+                            binding.mailingListMessage?.let {
+                                TooltipCompat.setTooltipText(
+                                    it,
+                                    getString(R.string.mailingListMessageOnToolTrip) + " $hours hours and $minutes minutes"
+                                )
+                            }
+                            // save in cache
+                            Cache().saveLong(
+                                applicationContext,
+                                getString(R.string.timerCache),
+                                calendar.timeInMillis
                             )
-                        }
-                        // save in cache
-                        Cache().saveLong(
-                            applicationContext,
-                            getString(R.string.timerCache),
-                            calendar.timeInMillis
-                        )
-                        binding.mailingListMessage?.text = getString(R.string.mailingListMessageOn)
-                        timerIsPressed = true
-                    }, Calendar.HOUR_OF_DAY, Calendar.MINUTE, true
-                ).show()
-                binding.mailingListMessage?.text = getString(R.string.mailingListMessageOff)
-            } else {
-                intentForService?.let {
-                    stopService(it)
-                    intentForService = null
-                }
+                            binding.mailingListMessage?.text =
+                                getString(R.string.mailingListMessageOn)
+                            timerIsPressed = true
+                        }, Calendar.HOUR_OF_DAY, Calendar.MINUTE, true
+                    ).show()
+                    binding.mailingListMessage?.text = getString(R.string.mailingListMessageOff)
+                } else {
+                    intentForService?.let {
+                        stopService(it)
+                        intentForService = null
+                    }
 
-                binding.mailingListMessage?.let {
-                    TooltipCompat.setTooltipText(
-                        it, getString(R.string.mailingListMessageOffToolTrip)
-                    )
+                    binding.mailingListMessage?.let {
+                        TooltipCompat.setTooltipText(
+                            it, getString(R.string.mailingListMessageOffToolTrip)
+                        )
+                    }
+                    // remove from cache
+                    Cache().remove(applicationContext, getString(R.string.timerCache))
+                    binding.mailingListMessage?.text = getString(R.string.mailingListMessageOff)
+                    timerIsPressed = false
                 }
-                // remove from cache
-                Cache().remove(applicationContext, getString(R.string.timerCache))
-                binding.mailingListMessage?.text = getString(R.string.mailingListMessageOff)
-                timerIsPressed = false
+            }
+            nav?.setNavigationItemSelectedListener {
+                when (it.itemId) {
+                    R.id.about_me -> {
+                        // TODO find me
+                    }
+                }
+                true
             }
         }
     }

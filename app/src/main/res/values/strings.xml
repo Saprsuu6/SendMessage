@@ -72,4 +72,8 @@
 
     <string name="timerCache">timerCache</string>
     <string name="timerError">Choose time greater than 5 minutes because this is spam</string>
+
+<!--    Navigation-->
+    <string name="aboutMe">About me</string>
+    <string name="headerDescription">headerDescription</string>
 </resources>
