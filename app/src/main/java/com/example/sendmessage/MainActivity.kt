@@ -24,10 +24,11 @@ import com.example.sendmessage.services.DataInCache
 import com.example.sendmessage.services.Permissions
 import com.example.sendmessage.services.SendSmsService
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 import java.util.concurrent.Executors
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val dataModel: DataModel by viewModels()
@@ -258,7 +259,7 @@ class MainActivity : AppCompatActivity() {
                 startService(intentForService)
             }
         } else {
-            startService(intent)
+            startService(intentForService)
         }
     }
 

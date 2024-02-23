@@ -9,6 +9,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -17,8 +18,8 @@ import android.telephony.SmsManager
 import android.util.Log
 import android.widget.Toast
 import com.example.sendmessage.R
-import com.example.sendmessage.models.Report
 import com.example.sendmessage.models.Contact
+import com.example.sendmessage.models.Report
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -104,7 +105,7 @@ class SendSmsService : Service() {
         private val message: String
     ) : Runnable {
         private var gson: Gson = GsonBuilder().create()
-        private val reportIntent: Intent = Intent("sendMessageReport")
+        private val reportIntent: Intent = Intent("com.example.sendmessage.SEND_REPORT_RECEIVER")
         private var smsPendingIntent: PendingIntent
 
         init {
@@ -202,13 +203,25 @@ class SendSmsService : Service() {
                     )
 
                     val reportToJson = gson.toJson(report)
-                    reportIntent.putExtra("report", reportToJson)
+                    reportIntent.setPackage("com.example.sendmessage")
                     try {
-                        context.sendBroadcast(reportIntent) // send broadcast to another app
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                            val extras = Bundle()
+                            extras.putString("report", reportToJson) // put extras
+
+                            context.sendBroadcast(
+                                reportIntent, null, extras
+                            ) // send broadcast to another app
+                        } else {
+                            reportIntent.putExtra("report", reportToJson) // put extras
+
+                            context.sendBroadcast(
+                                reportIntent, null
+                            ) // send broadcast to another app
+                        }
                     } catch (e: Exception) {
                         Log.println(Log.ERROR, "Send broadcast error", e.message.toString())
                     }
-                    context.sendBroadcast(reportIntent) // send broadcast to another app
                     // endregion
                 } catch (e: java.lang.Exception) {
                     println(e.message)
