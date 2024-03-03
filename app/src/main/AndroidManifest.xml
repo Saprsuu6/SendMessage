@@ -30,7 +30,8 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="location"
-            android:stopWithTask="false" />
+            android:stopWithTask="false"
+            tools:ignore="ForegroundServicePermission" />
 
         <activity
             android:name=".MainActivity"
